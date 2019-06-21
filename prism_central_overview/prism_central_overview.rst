@@ -1,10 +1,10 @@
 .. _prism_central_overview:
 
 -----------------------
-Prism Central: Overview
+Prism Central: 概述
 -----------------------
 
-Overview
+概述
 ++++++++
 
 This lab will introduce the Prism Central UI, and familiarize you with its layout and navigation.
@@ -52,7 +52,7 @@ Prism Central
 - User :fa:`user`
 
 .......................
-Prism Central UI Review
+Prism Central 界面
 .......................
 
 How would you find the screen that shows you a table of all the hosts managed by an instance of Prism Central?
