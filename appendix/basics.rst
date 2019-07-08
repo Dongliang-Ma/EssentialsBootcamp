@@ -11,7 +11,7 @@ Calm的基础知识
 
 在导航栏中，选择**Apps**。
 
-**Applications**选项卡显示已从Blueprint启动的所有应用程序实例。
+Applications**选项卡显示已从Blueprint启动的所有应用程序实例。
 
 选项卡式导航
 =================
