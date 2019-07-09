@@ -1,5 +1,5 @@
 -------------
-Glossary
+词汇表
 -------------
 
 Nutanix Core
@@ -8,93 +8,93 @@ Nutanix Core
 AOS
 ...
 
-AOS stands for Acropolis Operating System, and it is the OS running on the Controller VMs (CVMs).
+AOS代表Acropolis操作系统，它是在Controller VMs（CVM）上运行的操作系统。
 
-Pulse
+Pulse 脉冲
 .....
 
-Pulse provides diagnostic system data to Nutanix customer support teams so that they can deliver proactive, context-aware support for Nutanix solutions.
+Pulse为Nutanix客户支持团队提供诊断系统数据，以便他们能够为Nutanix解决方案提供主动的上下文感知支持。
 
-Prism Element
+Prism Elemen
 .............
 
-Prism Element is the native management plane for Nutanix. Because its design is based on consumer product interfaces, it is more intuitive and easier to use than many enterprise application interfaces.
+Prism Element是Nutanix的原生管理平台。由于其设计基于消费者产品界面，因此它比许多企业应用程序界面更直观，更易于使用。
 
 Prism Central
 .............
 
-Prism Central is the multicloud control and management interface for Nutanix. Prism Central can manage multiple Nutanix clusters and serves as an aggregation point for monitoring and analytics.
+Prism Central是Nutanix的多云控制和管理界面。 Prism Central可以管理多个Nutanix群集，并作为监控和分析的聚合点。
 
 Node
 ....
 
-Industry standard x86 server with server-attached SSD and optional HDD (All Flash & Hybrid Options).
+行业标准x86服务器，带有服务器直接的SSD和可选的HDD（全闪存和混合选项）。
 
 Block
 .....
 
-2U rack mount chassis that contains 1, 2 or 4 nodes with shared power and fans, and no shared no backplane.
+2U机架式机箱，包含1,2或4个节点，共享电源和风扇，没有共享的背板。
 
 Storage Pool
 ............
 
-A storage pool is a group of physical storage devices including PCIe SSD, SSD, and HDD devices for the cluster.
+存储池是一组物理存储设备，包括用于群集的PCIe SSD，SSD和HDD设备。
 
 Storage Container
 .................
 
-A container is a subset of available storage used to implement storage policies.
+Storage Container 容器是用于实现存储策略的可用存储的子集。
 
-Anatomy of a Read I/O
+读I/O的解析
 .....................
 
-Performance and Availability
+性能和可用性
 
-- Data is read locally
-- Remote access only if data is not locally present
+ - 数据在本地读取
+ - 仅当数据不在本地时才进行远程访问
 
-Anatomy of a Write I/O
+写入I/O的解析
 ......................
 
-Performance and Availability
+性能和可用性
 
-- Data is written locally
-- Replicated on other nodes for high availability
-- Replicas are spread across cluster for high performance
+ - 数据是在本地写入的
+ - 在其他节点上复制以获得高可用性
+ - 副本分布在群集中以获得高性能
 
-Nutanix flow
+Nutanix Flow
 ++++++++++++
 
 Application Security Policy
 ...........................
 
-Use an application security policy when you want to secure an application by specifying allowed traffic sources and destinations.
+如果要通过指定允许的流量源和目标来保护应用程序，请使用Application Security Policy"应用程序安全策略"。
 
 Isolation Environment Policy
 ............................
 
-Use an isolation environment policy when you want to block all traffic, regardless of direction, between two groups of VMs identified by their category. VMs within a group can communicate with each other.
+如果要阻止由其类别标识的两组VM之间的所有流量（无论方向如何），请使用Isolation Environment Policy"隔离环境策略"。组内的VM可以相互通信。
 
 Quarantine Policy
 .................
 
-Use a quarantine policy when you want to isolate a compromised or infected VM and optionally want to subject it to forensics. You cannot modify this policy. The two modes to quarantine a VM are Strict or Forensic.
+如果要隔离受感染或受感染的VM并且可选择要对其进行取证，请使用Quarantine Policy"隔离策略"。您无法修改此政策。隔离VM的两种模式是Strict或Forensic。
 
-Strict: Use this value when you want to block all inbound and outbound traffic.
+Strict 严格：如果要阻止所有入站和出站流量，请使用此设置。
 
-Forensic: Use this value when you want to block all inbound and outbound traffic except the traffic to and from categories that contain forensic tools.
+Forensic 取证：如果要阻止除包含取证工具的类别的流量之外的所有入站和出站流量，请使用此设置。
 
 AppTier
 .......
 
-Add values for the tiers in your application (such as web, application_logic, and database) to this category and use the values to divide the application into tiers when configuring a security policy.
+将应用程序中的层（例如web，application_logic和database）的值添加到此类别，并在配置安全策略时使用这些值将应用程序划分为层。
 
 AppType
 .......
 
-Associate the VMs in your application with the appropriate built-in application type such as Exchange and Apache_Spark. You can also update the category to add values for applications not listed in this category.
+将应用程序中的VM与适当的内置应用程序类型（如Exchange和Apache_Spark）相关联。您还可以更新类别，以便为此类别中未列出的应用程序添加值。
 
 Environment
 ...........
 
-Add values for environments that you want to isolate from each other and then associate VMs with the values.
+为要彼此隔离的环境添加值，然后将VM与值关联。
