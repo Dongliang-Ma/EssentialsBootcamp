@@ -8,9 +8,9 @@
 
 这允许管理员使用这些凭据而不是Nutanix群集本地凭据登录。
 
- .. note::
+.. note::
 
-  Prism Central 和 Prism Element的步骤相同
+  The Steps are the same for Prism Central and Prism Element
 
 在** Prism **中， 点击 :fa:`cog` **> Authentication**
 
