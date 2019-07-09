@@ -12,7 +12,7 @@ This lab will introduce the Prism Central UI, and familiarize you with its layou
 Prism Central
 +++++++++++++
 
-#. Open https://<*Prism-Central-IP*>:9440
+#. Open  https://<*Prism-Central-IP*>:9440
 
 #. Fill out the following fields and click **Enter**:
 
