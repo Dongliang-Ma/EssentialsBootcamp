@@ -8,7 +8,7 @@
 
 这允许管理员使用这些凭据而不是Nutanix群集本地凭据登录。
 
-.. note::
+ .. note::
 
   Prism Central 和 Prism Element的步骤相同
 
