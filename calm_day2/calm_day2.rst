@@ -1,64 +1,62 @@
-.. _calm_day2:
+.. _calm_day2：
 
 ---------------------------------
-Calm: Day 2 Operations (Optional)
+Calm：第2天操作（可选）
 ---------------------------------
 
-Overview
+概述
 ++++++++
 
-In the :ref:`calm_linux` and :ref:`calm_win` labs you explored how Calm can be used to model and deploy complex applications using a blueprint. Calm, however, it capable of managing applications throughout their **entire** lifecycle.
+在：ref：`calm_linux`和：ref：`calm_win`实验室中，您探索了如何使用蓝图来模拟和部署复杂应用程序。然而，Calm，它能够在 **整个** 生命周期中管理应用程序。
 
-**In this lab you will implement custom actions within Calm to address "Day 2" operations, including scaling out, scaling in, and upgrading your application.**
+**在本实验中，您将在Calm中实施自定义操作以解决“第2天”操作，包括横向扩展，纵向扩展和升级应用程序。**
 
-Lab Setup
-+++++++++
+实验室设置
+++++++++++
 
-This lab depends on the availability of a multi-tier **Task Manger** web application implemented during the :ref:`calm_linux` lab.
+本实验取决于：ref：`calm_linux`实验室中实现的多层 **Task Manger** Web应用程序的可用性。
 
-If you already have basic Calm familiarity and have not completed the :ref:`calm_linux` lab, please refer to the :ref:`taskman` lab for instructions on importing the base **Task Manager** blueprint.
+如果您已经基本熟悉并且尚未完成：ref：`calm_linux`实验，请参阅：ref：`taskman`实验以获取有关导入基于  **Task Manager** 蓝图的说明。
 
-**You do NOT need to launch the Task Manager blueprint once imported.**
+ **导入后无需启动任务管理器蓝图。**
 
-Scaling Out
+横向扩展
 +++++++++++
 
-Imagine you're the administrator of the Task Manager application that we've been building, and you're currently unsure of the amount of demand for this application by your end users. Or, potentially, you expect the demand to ebb and flow due to the time of the year. How can we easily scale to meet this changing demand?
+假设您是我们正在构建的任务管理器应用程序的管理员，目前，您还不确定最终用户对该应用程序的需求量。或者，你可能认为需求会随着时间的推移而起伏。我们如何轻松扩展以满足这种不断变化的需求？
 
-During the creation of the Task Manager blueprint, the **WebServer** service was configured with a minimum number of 2 replicas, with a maximum of 4. As a result, Calm will create 2 WebServer VMs during the initial deployment. In the event the 2 replicas are not enough to handle the load of your end users, a **Scale Out** operation is required.
+在创建任务管理器蓝图期间，**WebServer** 服务配置了最少2个副本，最多为4个。因此，Calm将在初始部署期间创建2个WebServer VM。如果2个副本不足以处理最终用户的负载，则需要进行 **Scale Out** 操作。
 
-#. In the **Application Overview > Application Profile** section, expand the **Default** Application Profile.
+#. 在 **Application Overview> Application Profile** 部分中，展开 **Default** Application Profile。
 
-   .. figure:: images/510scaleout0.png
+   .. figure :: images / 510scaleout0.png
 
-#. Select :fa:`plus-circle` next to **Actions** to add a new, custom action.  On the **Configuration Pane** to the right, rename the new Action to be **Scale Out**.
+#. 选择：fa：`plus-circle`旁边的 **Actions** 添加一个新的自定义动作。在右侧的 **Configuration Pane** 中，将新操作重命名为 **Scale Out**。
 
-   .. figure:: images/510scaleout1.png
+   .. figure :: images / 510scaleout1.png
 
-#. In the box **below** the **WebServer** service tile, click the **+ Task** button to add a scaling task, and fill out the following fields:
+#. 在下面的 **below** 的 **WebServer** 服务标签中，单击 **+ Task** 按钮添加扩展任务，并填写以下字段：
 
    - **Task Name** - web_scale_out
    - **Scaling Type** - Scale Out
    - **Scaling Count** - 1
 
-   .. figure:: images/510scaleout2.png
+   .. figure :: images / 510scaleout2.png
 
-   .. note::
+   .. note:: 服务标签下方显示的 **+Task** 按钮仅用于向上和向下缩放副本数量，因此选择正确的选项很重要。
 
-     The **+ Task** button that appears below the service tile is only used for scaling the number of replicas up and down, so it is important to select the correct option.
+   当用户稍后运行 **Scale Out** 任务时，将创建一个新的 **WebServer**  VM，并将执行该服务的 **Package Install** 任务。但是，我们需要修改 **HAProxy** 配置才能开始利用这个新的Web服务器。
 
-   When a user later runs the **Scale Out** task, a new **WebServer** VM will get created, and the **Package Install** tasks for that service will be executed.  However, we do need to modify the **HAProxy** configuration in order to start taking advantage of this new web server.
-
-#. **Within** the **HAProxy** service tile, click the **+ Task** button, then fill out the following fields:
+#.  **Within** 的 **HAProxy** 服务标签中，单击 **+Task** 按钮，然后填写以下字段：
 
    - **Task Name** - add_webserver
    - **Type** - Execute
    - **Script Type** - Shell
    - **Credential** - CENTOS
 
-#. Copy and paste the following script into the **Script** field:
+#. 将以下脚本复制并粘贴到 **Script** 字段中：
 
-   .. code-block:: bash
+ .. code-block:: bash
 
      #!/bin/bash
      set -ex
@@ -70,32 +68,32 @@ During the creation of the Task Manager blueprint, the **WebServer** service was
      sudo systemctl daemon-reload
      sudo systemctl restart haproxy
 
-   The script will parse the last IP address in the WebServer address array and append it to the haproxy.cfg file.  However, we want to be sure that this doesn't happen until **after** the new WebServer is fully up, otherwise the HAProxy server may send requests to a non-functioning WebServer.
+   该脚本将解析WebServer地址数组中的最后一个IP地址，并将其附加到haproxy.cfg文件中。但是，我们希望确保在新的WebServer完全启动后 **after** 不会发生这种情况，否则HAProxy服务器可能会向无法运行的WebServer发送请求。
 
-#. To solve this issue, create an edge to force a dependency on the **web_scale_out** task completing prior to the **add_webserver** task.
+#. 要解决此问题，请创建边界以强制依赖 **web_scale_out** 任务在 **add_webserver** 任务之前完成。
 
-   Your **Workspace** should now look like this:
+   您的 **Workspace** 现在应该如下所示：
 
-   .. figure:: images/510scaleout3.png
+   .. figure :: images / 510scaleout3.png
 
-Scaling In
+缩小
 ++++++++++
 
-It's the end of your busy season, and you'd like to optimize your resource utilization by scaling back the number of deployed Web Servers.
+在繁忙季节结束后，您希望通过缩减已部署的Web服务器的数量来优化资源利用率。
 
-#. Select :fa:`plus-circle` to add a custom action named **Scale In** to the Default **Application Profile**.
+#. 选择：fa：`plus-circle`将名为 **Scale In** 的自定义动作添加到默认 **Application Profile**。
 
-   .. figure:: images/510scalein1.png
+   .. figure :: images / 510scalein1.png
 
-#. **Below** the **WebServer** service tile, click the **+ Task** button to add a scaling task, and fill out the following fields:
+#. 在 **WebServer** 服务标签 **下方**，单击 **+Task** 按钮添加扩展任务，并填写以下字段：
 
    - **Task Name** - web_scale_in
    - **Scaling Type** - Scale In
    - **Scaling Count** - 1
 
-   .. figure:: images/510scalein2.png
+   .. figure :: images / 510scalein2.png
 
-   When a user later runs the **Scale In** task, the last **WebServer** replica will have its **Package Uninstall** task run, the VM will be shut down, and then deleted, which will reclaim resources.  However, we do need to modify the **HAProxy** configuration to ensure that we're no longer sending traffic to the to-be-deleted Web Server.
+   当用户稍后运行 **Scale In** 任务时，最后一个 **WebServer** 副本将运行其 **Package Uninstall** 任务，VM将被关闭，然后被删除，这将回收资源。但是，我们确实需要修改 **HAProxy** 配置，以确保我们不再向要删除的Web服务器发送流量。
 
 #. **Within** the **HAProxy** service tile, click the **+ Task** button, then fill out the following fields:
 
