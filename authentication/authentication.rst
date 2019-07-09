@@ -10,7 +10,7 @@
 
 .. note::
 
-  Prism Central和Prism Element的步骤相同
+  Prism Central 和 Prism Element的步骤相同
 
 在** Prism **中， 点击 :fa:`cog` **> Authentication**
 
