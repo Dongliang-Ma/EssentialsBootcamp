@@ -45,8 +45,7 @@ Calm：第2天操作（可选）
 
 .. note::
 
-     The **+ Task** button that appears below the service tile is only used for scaling the number of replicas up and down, so it is important to select the correct option.
-   **服务标签下方显示的 **+Task** 按钮仅用于向上和向下缩放副本数量，因此选择正确的选项很重要。** 
+     服务标签下方显示的 **+Task** 按钮仅用于向上和向下缩放副本数量，因此选择正确的选项很重要。 
 
    当用户稍后运行 **Scale Out** 任务时，将创建一个新的 **WebServer**  VM，并将执行该服务的 **Package Install** 任务。但是，我们需要修改 **HAProxy** 配置才能开始利用这个新的Web服务器。
 
