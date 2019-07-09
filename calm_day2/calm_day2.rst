@@ -29,11 +29,11 @@ Calm：第2天操作（可选）
 
 #. 在 **Application Overview> Application Profile** 部分中，展开 **Default** Application Profile。
 
-   .. figure :: images / 510scaleout0.png
+   .. figure:: images/510scaleout0.png
 
 #. 选择：fa：`plus-circle`旁边的 **Actions** 添加一个新的自定义动作。在右侧的 **Configuration Pane** 中，将新操作重命名为 **Scale Out**。
 
-   .. figure :: images / 510scaleout1.png
+   .. figure:: images/510scaleout1.png
 
 #. 在下面的 **below** 的 **WebServer** 服务标签中，单击 **+ Task** 按钮添加扩展任务，并填写以下字段：
 
@@ -41,9 +41,11 @@ Calm：第2天操作（可选）
    - **Scaling Type** - Scale Out
    - **Scaling Count** - 1
 
-   .. figure :: images / 510scaleout2.png
+   .. figure:: images/510scaleout2.png
 
-   .. note:: 服务标签下方显示的 **+Task** 按钮仅用于向上和向下缩放副本数量，因此选择正确的选项很重要。
+   .. note:: 
+   
+   服务标签下方显示的 **+Task** 按钮仅用于向上和向下缩放副本数量，因此选择正确的选项很重要。
 
    当用户稍后运行 **Scale Out** 任务时，将创建一个新的 **WebServer**  VM，并将执行该服务的 **Package Install** 任务。但是，我们需要修改 **HAProxy** 配置才能开始利用这个新的Web服务器。
 
@@ -74,7 +76,7 @@ Calm：第2天操作（可选）
 
    您的 **Workspace** 现在应该如下所示：
 
-   .. figure :: images / 510scaleout3.png
+   .. figure:: images/510scaleout3.png
 
 缩小
 ++++++++++
@@ -83,7 +85,7 @@ Calm：第2天操作（可选）
 
 #. 选择：fa：`plus-circle`将名为 **Scale In** 的自定义动作添加到默认 **Application Profile**。
 
-   .. figure :: images / 510scalein1.png
+   .. figure:: images/510scalein1.png
 
 #. 在 **WebServer** 服务标签 **下方**，单击 **+Task** 按钮添加扩展任务，并填写以下字段：
 
@@ -91,7 +93,7 @@ Calm：第2天操作（可选）
    - **Scaling Type** - Scale In
    - **Scaling Count** - 1
 
-   .. figure :: images / 510scalein2.png
+   .. figure:: images/510scalein2.png
 
    当用户稍后运行 **Scale In** 任务时，最后一个 **WebServer** 副本将运行其 **Package Uninstall** 任务，VM将被关闭，然后被删除，这将回收资源。但是，我们确实需要修改 **HAProxy** 配置，以确保我们不再向要删除的Web服务器发送流量。
 
