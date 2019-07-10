@@ -97,14 +97,14 @@ Calm：第2天操作（可选）
 
    当用户稍后运行 **Scale In** 任务时，最后一个 **WebServer** 副本将运行其 **Package Uninstall** 任务，VM将被关闭，然后被删除，这将回收资源。但是，我们确实需要修改 **HAProxy** 配置，以确保我们不再向要删除的Web服务器发送流量。
 
-#. **Within** the **HAProxy** service tile, click the **+ Task** button, then fill out the following fields:
+#. 在 **HAProxy** 服务标签中 **Within**，单击 **+Task** 按钮，然后填写以下字段：
 
    - **Task Name** - del_webserver
    - **Type** - Execute
    - **Script Type** - Shell
    - **Credential** - CENTOS
 
-#. Copy and paste the following script into the **Script** field:
+#. 将以下脚本复制并粘贴到 **Script** 字段中：
 
    .. code-block:: bash
 
@@ -117,28 +117,28 @@ Calm：第2天操作（可选）
      sudo systemctl daemon-reload
      sudo systemctl restart haproxy
 
-   Similar to the scale out script, this script will parse the last IP in the WebServer address array and use the `sed <http://www.grymoire.com/Unix/Sed.html>`_ command to remove the corresponding entry from haproxy.cfg.
+与scale out脚本类似，这个脚本将解析WebServer地址数组中的最后一个IP，并使用“sed <http://www.grymoire.com/Unix/Sed.html>”命令从haproxy.cfg中删除相应的条目。
 
-   Again, similar to the scale out script, we want to ensure requests stop being sent to the VM **before** it is removed.
+同样，与scale out脚本类似，我们希望确保在删除请求之前 **before** 停止向VM 发送请求。
 
-#. To solve this issue, create an edge to force a dependency on the **del_webserver** task completing prior to the **web_scale_in** task.
+#. 要解决这个问题，创建一个edge来强制依赖于在 **web_scale_in** 任务之前完成的 **del_webserver** 任务。
 
-   Your **Workspace** should now look like this:
+   你的 **Workspace** 现在应该是这样的:
 
    .. figure:: images/510scalein3.png
 
-#. Click **Save** and ensure no errors or warnings pop-up. If they do, resolve the issue, and **Save** again.
+#. 单击 **Save**，确保不会弹出错误或警告。如果他们这样做了，请解决这些问题，并再次 **Save**。
 
-Upgrading
+升级
 +++++++++
 
-Your company has a mandate to keep all application code up to date, to help minimize security vulnerabilities. Your company also has a strict change control process, meaning you can only update your application during the weekend. You currently spend a significant portion of your time on one Saturday every month completing application update procedures during a maintenance window. Let's look at how you can reclaim your weekend by modeling the application upgrade with Calm.
+您的公司有权保持所有应用程序代码都是最新的，以帮助最小化安全漏洞。你的公司也有严格的变更控制程序，这意味着你只能在周末更新你的应用程序。目前，在维护窗口期间，您每个月的一个星期六都要花费大量的时间来完成应用程序更新过程。让我们看看如何通过使用Calm对应用程序升级进行建模，从而使你重新找回周末的。
 
-#. Select :fa:`plus-circle` to add a custom action named **Upgrade** to the Default **Application Profile**.
+#. 选择 :fa:`plus-circle` 将一个名为 **Upgrade** 的自定义操作添加到默认的 **Application Profile** 中。
 
-   The first thing we're going to need to do is to stop the respective processes on each of our Services.
+  我们首先需要做的是停止我们每项服务的相应流程。
 
-#. **Within each** of our 3 Services, click the **+ Task** button to add a new task, and fill in the following information:
+#. 在我们提供的3项服务的每项 **Within each** 内，按 **+ Task** 按钮添加新任务，并填写以下资料:
 
    +------------------+-----------+---------------+-------------+
    | **Service Name** | MySQL     | WebServer     | HAProxy     |
@@ -182,19 +182,19 @@ Your company has a mandate to keep all application code up to date, to help mini
 
       sudo systemctl stop haproxy
 
-   Once complete, your **Workspace** should look like this:
+   完成后，您的 **Workspace** 应该是这样的:
 
    .. figure:: images/upgrade1.png
 
-   Similar to both scaling and initial deployment operations, we do not want to get into a situation where the WebServer goes down before the HAProxy, nor do we want the MySQL database to go down before the WebServers.
+   与扩展和初始部署操作类似，我们不希望web服务器先于HAProxy关机，也不希望MySQL数据库先于web服务器关机。
 
-#. Create edges between services such that HAProxy stops before WebServers, and all WebServers stop before MySQL:
+#. 重新定义服务之间的边界，比如HAProxy在webserver之前停止，所有的webserver在MySQL之前停止:
 
    .. figure:: images/upgrade2.png
 
-   Now that our critical services are stopped, we'll want to perform our updates.
+   现在我们的关键服务已停止，我们就可以执行更新了。
 
-#. Again, **within each** Service, add a new Task.  All of the 3 tasks are identical other than the name:
+#. 再重复一次，在每个服务中 **within each**，添加一个新任务。 除名称外，所有3个任务都是相同的：
 
    +------------------+--------------+------------------+----------------+
    | **Service Name** | MySQL        | WebServer        | HAProxy        |
@@ -219,21 +219,21 @@ Your company has a mandate to keep all application code up to date, to help mini
 
       sudo yum update -y
 
-   This script will use the Red Hat/CentOS package management tool, `yum <https://access.redhat.com/solutions/9934>`_ to search for and install updates to all installed packages.
+   这个脚本将使用Red Hat/CentOS包管理工具 `yum <https://access.redhat.com/solutions/9934>`_ 搜索并安装所有已安装包的更新。
 
-   Your **Workspace** should now look like this:
+   你的 **Workspace** 现在应该是这样的:
 
    .. figure:: images/upgrade3.png
 
-   From an a task ordering perspective, do we need to draw any orchestration edges? Notice in the screenshot above that Calm automatically draws and edge from the **Stop** task to the **Upgrade** task, which is good as that's required. However, do we need any side to side dependencies?
+    从任务排序的角度来看，我们是否需要绘制任何编排边缘？ 请注意，在上面的屏幕截图中，Calm自动从 **Stop** 任务绘制并到 **Upgrade** 任务的边界，这是必要的。 但是，我们需要任何一对一的依赖关系吗？
 
-   If you said "no", you're correct. The critical components are starting and stopping of the Services, there's no reason to have each Service upgrade one at a time.
+    如果你说“不”，那你就是对的。 关键组件是服务的启动和停止，没有理由一次升级一个服务。
 
-   Unless you specify otherwise, Calm will always run tasks in parallel to save time.
+    除非另有说明，否则Calm将始终并行运行任务以节省时间。
 
-   Now that our Services have been upgraded, it's time to start them.
+    现在我们的服务已升级，是时候启动它们了。
 
-#. Again, we'll add a Task **within each** Service, with the following values:
+#. 再重复一次，在每个服务中 **within each**， 包含以下值：
 
    +------------------+--------------+------------------+----------------+
    | **Service Name** | MySQL        | WebServer        | HAProxy        |
@@ -277,57 +277,57 @@ Your company has a mandate to keep all application code up to date, to help mini
 
       sudo systemctl start haproxy
 
-   Your **Workspace** should now look like this:
+   你的 **Workspace** 现在应该是这样的:
 
    .. figure:: images/upgrade4.png
 
-   This time, we **DO** require additional orchestration edges. As previously discussed, we would not want our HAProxy service up before our WebServers, or our WebServers up before our MySQL database.
+   这一次，我们 **Do** 需要额外的编排边界。 如前所述，我们不希望在我们的WebServers之前启动HAProxy服务，或者在我们的MySQL数据库之前启动我们的WebServers。
 
-#. Create orchestration edges starting with MySQL, then the WebServers, and lastly the HAProxy:
+#. 创建从MySQL开始的业务流程边界，然后是WebServers，最后是HAProxy：
 
    .. figure:: images/upgrade5.png
 
-#. Click **Save** and ensure no errors or warnings pop-up.  If they do, resolve the issue, and **Save** again.
+#. 单击 **Save** 并确保没有错误或警告弹出。 如果有错误，请解决这些问题，然后再次 **Save**。
 
-Launching and Managing the Application
+启动和管理应用程序
 ++++++++++++++++++++++++++++++++++++++
 
-#. From the upper toolbar in the Blueprint Editor, click **Launch**.
+#. 从Blueprint Editor的上方工具栏中，单击 **Launch**。
 
-#. Specify a unique **Application Name** (e.g. *Initials*\ -CalmLinuxIntro1) and your **User_initials** Runtime variable value for VM naming.
+#. 为VM命名指定唯一的 **Application Name** (例如 *Initials*\ -CalmLinuxIntro1)和 **User_initials** 运行时变量值。
 
-#. Click **Create**.
+#. 单击 **Create**。
 
-#. Once the application reaches a **Running** status, navigate to the **Manage** tab, and run the **Scale Out** action.
+#. 一旦应用程序达到 **Running** 状态，导航到 **Manage** 选项卡，然后运行 **Scale Out** 操作。
 
-   Changes to the application can be monitored on the **Audit** tab.
+   可以在 **Audit** 选项卡上监视对应用程序的更改。
 
-   Once the scaling operation has completed, you can log into the HAProxy VM and verify the new Web Server has been added to ``/etc/haproxy/haproxy.cfg``.
+   完成扩展操作后，您可以登录HAProxy VM并验证新的Web服务器是否已添加到 ``/etc/haproxy/haproxy.cfg``。
 
-#. Run the **Upgrade** action to update each service.
+#. 运行 **Upgrade** 操作以更新每项服务。
 
-#. Finally, run the **Scale In** action to remove the additional Web Server VM.
+#. 最后，运行 **Scale In** 操作以删除其他Web Server VM。
 
-(Optional) Variable Scaling
-+++++++++++++++++++++++++++
+Variable Scaling变量缩放（可选）
+++++++++++++++++++++++++++++++++
 
-In this lab you configured scaling operations that expanded or shrank the WebServer service array by a single VM.
+在这个实验室中，您配置了缩放操作，这些操作通过单个VM扩展或收缩webServer服务数组。
 
-When creating a new custom action, additional variables can be defined in the Configuration Pane specific to that action.
+创建新的自定义操作时，可以在特定于该操作的配置窗格中定义其他变量。
 
-.. figure:: images/optional1.png
+.. figure :: images / optional1.png
 
-Leveraging a runtime variable, can you modify the scale out or scale in actions to perform a variable scaling operation?
+利用运行时变量，可以修改scale out或scale in 操作来执行变量缩放操作吗?
 
-This will require some bash scripting experience to ensure the appropriate number of entries are being added and/or removed from the haproxy.cfg file.
+这将需要一些bash脚本编写经验，以确保从haproxy.cfg文件中添加和/或删除适当数量的条目。
 
-Takeaways
+小贴士
 +++++++++
 
-What are the key things you should know about **Nutanix Calm**?
+关于** Nutanix Calm **你应该知道的关键事项是什么？
 
-- Not only can Calm orchestrate complex application deployments, it can manage applications throughout their entire lifecycle, by modeling complex Day 2 operations.
+ - 通过对复杂的第2天操作进行建模，Calm不仅可以协调复杂的应用程序部署，还可以在整个生命周期内管理应用程序。
 
-- Whether it's a built in task, like scaling, or a custom task, like upgrades, Calm can be directed to perform the operations in specific order, or if order doesn't matter, perform them in parallel to save on time.
+ - 无论是内置任务（如扩展）还是自定义任务（如升级），都可以指示Calm以特定顺序执行操作，或者如果顺序无关紧要，则可以并行执行以节省时间。
 
-- What operation are you currently doing on a regular basis?  It's likely that it can be modeled in Calm, saving you countless hours.  Take back your weekend!
+ - 您目前正在进行哪些操作？它很可能可以在Calm中建模，为您节省数不清的时间。享受你的周末吧！
