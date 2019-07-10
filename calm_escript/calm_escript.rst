@@ -1,13 +1,13 @@
 *Script Provided Below*.. _calm_escript:
 
 -----------------------------------------
-Calm: EScript and Task Library (Optional)
+Calm: EScript和任务库(可选)
 -----------------------------------------
 
-Overview
+概述
 ++++++++
 
-In the :ref:`calm_linux` and :ref:`calm_win` labs you explored how Calm can utilize Bash and PowerShell scripts to automate application deployments. While shell scripts can be both powerful and versatile, they require the deployment of an endpoint VM on which to copy and execute the script locally.
+在 :ref:`calm_linux` 和 :ref:`calm_win` 实验中，您探索了Calm如何利用Bash和PowerShell脚本自动化应用程序部署。虽然shell脚本既强大又通用，但它们需要部署端点VM，以便在该VM上本地复制和执行脚本。
 
 There are use cases that would be better served to execute code directly within Calm, such as making API calls to other RESTful services like Nutanix Era, GitHub, IFTTT, etc.
 
