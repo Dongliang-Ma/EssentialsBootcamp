@@ -154,10 +154,10 @@ RESTList自定义操作
 
 #. 单击 **Save**, 并确保没有出现错误或警告。
 
-GetDefaultSubnet Custom Action
+GetDefaultSubnet自定义操作
 ++++++++++++++++++++++++++++++
 
-In this exercise, we're going to create an additional custom action to make a different REST API call. The call will return the list of **Projects** on this Prism Central instance.  We'll then parse the output of that API call to get the UUID of the default subnet configured for the project that the running application belongs to.  This UUID will be set as a Calm variable, allowing for re-use elsewhere in the blueprint.  We'll then do another Rest API call, a GET on the default subnet (utilizing this newly set variable).
+在这个练习中，我们将创建一个额外的自定义操作来执行一个不同的REST API调用。调用将返回这个Prism中心实例上的 **Projects** 列表。然后，我们将解析该API调用的输出，以获得为正在运行的应用程序所属的项目配置的默认子网的UUID。这个UUID将被设置为一个平静的变量，允许在蓝图的其他地方重用。然后，我们将执行另一个Rest API调用，即GET on the default子网(使用这个新设置的变量)。
 
 #. Select the **PC** service. In the **Configuration Pane**, select the **Service** tab. Add a variable named **SUBNET**, leaving all other fields blank.
 
