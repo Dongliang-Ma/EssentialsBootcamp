@@ -9,38 +9,38 @@ Calm: EScript和任务库(可选)
 
 在 :ref:`calm_linux` 和 :ref:`calm_win` 实验中，您探索了Calm如何利用Bash和PowerShell脚本自动化应用程序部署。虽然shell脚本既强大又通用，但它们需要部署端点VM，以便在该VM上本地复制和执行脚本。
 
-There are use cases that would be better served to execute code directly within Calm, such as making API calls to other RESTful services like Nutanix Era, GitHub, IFTTT, etc.
+有一些用例可以更好地直接在Calm中执行代码，例如对其他RESTful服务（如Nutanix Era，GitHub，IFTTT等）进行API调用。
 
-To fill this need, Calm offers a script type called `EScript <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Calm-Admin-Operations-Guide-v250:nuc-supported-escript-modules-functions-c.html>`_. Short for Epsilon Script (Epsilon is the orchestration engine that drives Calm), EScript is a sandboxed Python interpreter. It contains many commonly used modules for scripting and automation. In particular, it contains the **requests** module as **urlreq**, used to create external API calls.
+为了满足这个需求，Calm提供了一个名为 `EScript <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Calm-Admin-Operations-Guide-v250:nuc-supported-escript-modules-functions-c.html>`_ 的脚本类型。它是Epsilon脚本的缩写(Epsilon是驱动Calm的编制引擎)，EScript是一个沙箱Python编译器。它包含许多用于脚本编制和自动化的常用模块。特别是，它将 **requests** 模块包含为 **urlreq**，用于创建外部API调用。
 
 .. note::
 
-  The interpreter is sandboxed because the script runs **directly** within the Calm engine, which means it runs directly within Prism Central.  Allowing the user to import unknown and unvetted modules into Prism Central is a security concern.
+  编译器是沙箱的，因为脚本 **直接** 运行在Calm引擎中，这意味着它直接运行在Prism Central中。允许用户将未知和未经审核的模块导入Prism Central是一个安全问题。
 
-**In this lab you will leverage EScript to perform API calls against an existing web service, your Prism Central VM. You will also leverage Set Variable to set the data returned from an API call to a Calm macro, and the Task Library to understand how common code can be used across multiple blueprints or projects.**
+**在本实验中，您将利用EScript对现有的Web服务Prism Central VM执行API调用。 您还将利用Set Variable将API调用返回的数据设置为Calm宏，并使用Task Library了解如何在多个蓝图或项目中使用公共代码。**
 
-Lab Setup
+Lab 设置
 +++++++++
 
-This lab assumes basic familiarity with Nutanix Calm.
+本实验假设你基本熟悉Nutanix Calm。
 
-**It does NOT require the Task Manager application deployed as part of other Calm labs.** Instead, you will create a new, blank Blueprint and add a credential used to authenticate to Prism Central.
+**它不需要将任务管理器应用程序部署为其他Calm实验的一部分。** 相反，您将创建一个新的空白蓝图，并添加一个用于向Prism Central进行身份验证的凭据。
 
-#. In **Prism Central**, select :fa:`bars` **> Services > Calm > Blueprints**.
+#. 在 **Prism Central** 中, 选择 :fa:`bars` **> Services > Calm > Blueprints**.
 
-#. Click **+ Create Blueprint > Multi VM/Pod Blueprint**.
+#. 点击 **+ Create Blueprint > Multi VM/Pod Blueprint**.
 
    .. figure:: images/create_blueprint.png
 
-#. Fill out the following fields and click **Proceed**:
+#. 填写以下字段，然后单击 **Proceed**:
 
    - **Name** - *Initials*\ -EScript
    - **Description** - My First EScript Blueprint
    - **Project** - default
 
-#. From the toolbar along the top of the blueprint, click **Credentials**.
+#. 从蓝图顶部的工具栏中，单击 **Credentials**.
 
-#. Click **Credentials** :fa:`plus-circle` and fill out the following fields:
+#. 单击 **Credentials** :fa:`plus-circle` 并填写以下字段:
 
    - **Credential Name** - PC_Creds
    - **Username** - admin
@@ -49,14 +49,14 @@ This lab assumes basic familiarity with Nutanix Calm.
 
    .. figure:: images/credentials.png
 
-#. Click **Save** and then **Back**, ensuring no errors or warnings appear.
+#. 单击 **Save** 然后单击 **Back**, 确保没有出现错误或警告。
 
-Using Existing Machine Services
+使用现有的机器服务
 +++++++++++++++++++++++++++++++
 
-#. In **Application Overview > Services**, click :fa:`plus-circle` to add a new Service.
+#. 在 **Application Overview > Services** 中, 单击 :fa:`plus-circle` 以添加新的服务。
 
-#. Under the **VM** tab, fill in the following fields:
+#. 在 **VM** 标签下, 填写以下字段:
 
    +------------------------------+------------------+
    | **Service Name**             | PC               |
@@ -84,15 +84,15 @@ Using Existing Machine Services
 
    .. figure:: images/existing_machine.png
 
-   There are several new and interesting items in the above configuration:
+   在上面的配置中有几个有趣的新项目:
 
-   - **Cloud** - Instead of creating a new VM on Nutanix or a public cloud provider, we're instead choosing to automate against an already existing machine. All that's required for us to enter is an IP Address of the machine, which in our case is Prism Central. Depending on your use case, you may specify something like Ansible Tower, or an Era Server, as an existing machine.
+   - **Cloud** - 我们没有在Nutanix或公共云提供商上创建一个新的VM，而是选择在现有机器上实现自动化。我们只需要输入机器的IP地址，在我们的示例中是Prism Central。根据您的用例，您可以将诸如Ansible Tower或Era Server之类的东西指定为现有的机器。
 
-   - **IP Address** - Since we're going to be making API Calls against Prism Central, and Calm runs directly in Prism Central, we're just entering localhost as an IP. If you were going to be automating against something like Ansible Tower or Era, you would need to put your Ansible Tower or Era Server IP addresses in this field, rather than localhost. IP Address could also be defined by a variable.
+   - **IP Address** - 因为我们要对Prism Central进行API调用，而Calm直接运行在Prism Central中，所以我们只是将localhost作为IP输入。如果您要对Ansible Tower或Era之类的东西进行自动化，您需要将您的Ansible Tower或Era服务器IP地址放在这个字段中，而不是localhost。IP地址也可以由变量定义。
 
-   - **Check log-in upon create** - This is the first time we've seen this box unselected. Since EScript tasks run directly within Calm, there's no need to SSH in to the Service in question. Instead we'll use credentials directly within the EScript code to authenticate our REST API call.
+   - **Check log-in upon create** - 这是我们第一次看到这个未选中的框。因为EScript任务直接在Calm中运行，所以不需要SSH到相关服务。相反，我们将在EScript代码中直接使用凭证对REST API调用进行身份验证。
 
-#. Click **Save**, and ensure no errors or warnings appear.
+#. 单击 **Save**, 并确保没有出现错误或警告。
 
 RESTList Custom Action
 ++++++++++++++++++++++
