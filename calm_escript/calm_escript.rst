@@ -94,18 +94,18 @@ Lab 设置
 
 #. 单击 **Save**, 并确保没有出现错误或警告。
 
-RESTList Custom Action
+RESTList自定义操作
 ++++++++++++++++++++++
 
-In this exercise, we're going to be creating a custom action for our application to make a REST API call against Prism Central. Specifically, it will be a POST /list call, where the entity (kind) to be listed (e.g. apps, hosts, clusters, roles, etc.) will be defined by a variable at runtime. The results of this call will then be output.
+在本练习中，我们将为应用程序创建一个自定义操作，以便对Prism Central进行REST API调用。具体来说， 它将是一个 POST /list 调用, 其中要列出的实体 (kind)(例如 应用, 主机, 群集, 角色等) 将在运行时由一个变量定义。然后输出这个调用的结果。
 
-#. In the **Application Overview > Application Profile** section, expand the **Default** Application Profile.
+#. 在 **Application Overview > Application Profile** 部分, 展开 **Default** Application Profile.
 
    .. figure:: images/addaction.png
 
-#. Select :fa:`plus-circle` next to **Actions** to add a new, custom action.
+#. 选择 :fa:`plus-circle` 然后下一步 **Actions** 添加一个新的自定义操作。
 
-#. On the **Configuration Pane** to the right, name the action **RESTList**, and add a single variable:
+#. 在 **Configuration Pane** 的右侧, 将操作命名为 **RESTList**, 并添加一个变量:
 
    - **Name** - kind
    - **Value** - apps
@@ -113,9 +113,9 @@ In this exercise, we're going to be creating a custom action for our application
 
    .. figure:: images/restlist.png
 
-   When running the custom action later, Calm will prompt the user for input. **Apps** will be pre-filled default value, but it can be changed prior to executing the script action.
+ 稍后运行自定义操作时，Calm将提示用户输入。**Apps** 将是预填充的默认值，但可以在执行脚本操作之前更改。
 
-#. Click the **+ Task** button to add a task to the **RESTList** custom action.  Fill in the following fields:
+#. 单击 **+ Task** 按键将任务添加到 **RESTList** 自定义操作。 填写以下字段：
 
    - **Task Name** - RuntimePost
    - **Type** - Execute
@@ -146,13 +146,13 @@ In this exercise, we're going to be creating a custom action for our application
 
    .. figure:: images/runtime_post.png
 
-   There are some new and interesting features of this task:
+  这项任务有一些有趣的新特点:
 
-   Note how there is not a Credential dropdown within the Calm UI, and instead we're setting Python variables equal to our PC_Creds username and password specified earlier. Other APIs may not require authentication, or require an API key to be provided as part of the URL.
+    注意，Calm UI中没有凭据下拉框，而是将Python变量设置为前面指定的PC_Creds用户名和密码。其他API可能不需要身份验证，或者需要提供API密钥作为URL的一部分。
 
-   We also see the `urlreq <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Calm-Admin-Operations-Guide-v250:nuc-supported-escript-modules-functions-c.html>`_ module being used, which is the exact line that our API call is made. If the response returns as expected, the JSON response will be formatted and printed, otherwise the corresponding error message will be printed.
+   我们还看到 `urlreq <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Calm-Admin-Operations-Guide-v250:nuc-supported-escript-modules-functions-c.html>`_ 模块被使用，这正是我们的API调用的确切行。如果响应按预期返回，JSON响应将被格式化并显示，否则将显示相应的错误消息。
 
-#. Click **Save**, and ensure no errors or warnings appear.
+#. 单击 **Save**, 并确保没有出现错误或警告。
 
 GetDefaultSubnet Custom Action
 ++++++++++++++++++++++++++++++
