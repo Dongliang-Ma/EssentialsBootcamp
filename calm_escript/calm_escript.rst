@@ -159,17 +159,16 @@ GetDefaultSubnet自定义操作
 
 在这个练习中，我们将创建一个额外的自定义操作来执行一个不同的REST API调用。调用将返回这个Prism中心实例上的 **Projects** 列表。然后，我们将解析该API调用的输出，以获得为正在运行的应用程序所属的项目配置的默认子网的UUID。这个UUID将被设置为一个平静的变量，允许在蓝图的其他地方重用。然后，我们将执行另一个Rest API调用，即GET on the default子网(使用这个新设置的变量)。
 
-#. Select the **PC** service. In the **Configuration Pane**, select the **Service** tab. Add a variable named **SUBNET**, leaving all other fields blank.
-
+#. 选择 **PC** 服务. 在 **Configuration Pane** 中, 选择 **Service** 选项卡. 添加名为 **SUBNET** 的变量, 将所有其他字段留空。
    .. figure:: images/subnet_variable.png
 
-#. In the **Application Overview > Application Profile > Default**, section, select :fa:`plus-circle` next to **Actions** to add a new, custom action.
+#. 在 **Application Overview > Application Profile > Default** 部分, 选择 :fa:`plus-circle` 旁边的 **Actions** 以添加新的自定义操作。
 
-#. Name the action **GetDefaultSubnet**.
+#. 将操作命名为 **GetDefaultSubnet**.
 
    .. figure:: images/get_default_subnet.png
 
-#. Click the **+ Task** button to add a task to the **GetDefaultSubnet** custom action.  Fill in the following fields:
+#. 单击 **+ Task** 按键将任务添加到 **GetDefaultSubnet** 自定义操作。 填写以下字段：
 
    - **Task Name** - GetSubnetUUID
    - **Type** - Set Variable
@@ -217,11 +216,11 @@ GetDefaultSubnet自定义操作
 
    .. figure:: images/get_subnet_uuid.png
 
-   There are two key differences between the **RESTList** and **GetDefaultSubnet** tasks. The first difference is the use of the **Set Variable** task type. Take note of the **print "SUBNET={0}"** line: Calm will parse output in the format of **variable=value**, and set the variable equal to the value.  In this example, we're printing the variable called **SUBNET** is equal to the UUID of the "default_subnet_reference" field in the initial API call response. In the **Output** field below the Script body, we must paste in the variable name for Calm to set the variable appropriately. The variable must already be defined in the Calm blueprint, whether globally, or in this case, as a variable local to the **PC** service.
+  在 **RESTList** 和 **GetDefaultSubnet** 任务之间有两个关键区别。 第一个区别是使用 **Set Variable** 任务类型， 请注意 **print "SUBNET={0}"** 行: Calm将解析格式为 **variable=value** 的输出, 并将变量设置为该值。 在本例中，我们打印的变量名为 **SUBNET** 等于初始API调用响应中的 "default_subnet_reference" 字段的UUID。 在脚本主体下面的 **Output** 字段中， 我们必须粘贴变量名以便Calm适当地设置变量。该变量必须已经在Calm blueprint中定义，无论是全局的，还是在本例中，作为**PC**服务的局部变量。
 
-   The second difference is that the **PC_Cred** credential was not used to authorize the API call against Prism Central. Instead, we're using a `JSON Web Token <https://en.wikipedia.org/wiki/JSON_Web_Token>`_ provided by the built-in **calm_jwt** macro.
+   第二个区别是 **PC_Cred** 凭证没有用于授权针对Prism Central的API调用。 相反， 我们使用的是内置的 **calm_jwt** 宏提供的一个 `JSON Web Token <https://en.wikipedia.org/wiki/JSON_Web_Token>`_。
 
-#. Click the **+ Task** button again to add a second task to the **GetDefaultSubnet** custom action.  Fill in the following fields:
+#. 单击 **+ Task** 按钮再次添加第二个任务到 **GetDefaultSubnet** 自定义操作。  填写以下字段：
 
    - **Task Name** - GetSubnetInfo
    - **Type** - Execute
@@ -249,81 +248,80 @@ GetDefaultSubnet自定义操作
         print "Get request failed", resp.content
         exit(1)
 
-   In this task we're dynamically returning details about the default subnet using a GET API call and the **SUBNET** UUID variable returned by the previous task.
+   在这个任务中，我们使用GET API调用和前一个任务返回的 **SUBNET** UUID变量动态地返回关于默认子网的详细信息。
 
    .. figure:: images/get_subnet_info.png
 
-#. Click **Save**, and ensure no errors or warnings appear.
+#. 单击 **Save**, 并确保不会出现任何错误或警告。
 
-Running the Custom Actions
+运行自定义操作
 ++++++++++++++++++++++++++
 
-#. **Launch** the blueprint. Name the application *Initials*\ **-RestCalls**, and then click **Create**.
+#. **Launch** 启动蓝图。 将应用程序命名为 *Initials*\ **-RestCalls**， 然后单击 **Create**。
 
-   The **Create** task should complete quickly, as no VMs are being provisioned or Package Install scripts being run.
-
-#. Once the application reaches **Running** status, select the **Manage** tab.
+   The **Create** 任务会很快完成，因为没有部署任何虚拟机，也没有运行安装包的脚本。 
+   
+#. 一旦应用程序达到 **Running** 状态， 请选择 **Manage** 选项卡。
 
    .. figure:: images/app_create.png
 
-#. Next, run the **RESTList** action by clicking its :fa:`play` icon. A new window appears displaying the **kind** variable and default **apps** value. Click **Run**.
+#. 接下来，通过单击:fa:`play` 图标来运行 **RESTList** 操作。 将出现一个新窗口，显示 **kind** 变量和默认 **apps** 值。单击 **Run**。
 
    .. figure:: images/apps_run.png
 
-#. In the output on the right pane, maximize the **RuntimePost** task, and view the API output. The output pane can be toggled by clicking the :fa:`eye` icon. Maximize the output/script window to make viewing easier. As expected, the script returns a JSON body with an array describing each launched application in Calm.
+#. 在右侧窗口的输出中，最大化 **RuntimePost** 任务，并查看API输出。可以通过单击 :fa:`eye` 图标来切换输出窗口，最大化 output/script窗口，使查看更容量。 正如所料，该脚本返回一个JSON主体，其中包含一个描述Calm中每个已启动应用程序的数组。
 
    .. figure:: images/apps_run2.png
 
-#. Run the **RESTList** action again, altering the value to another `Prism Central API entity <https://developer.nutanix.com/reference/prism_central/v3/>`_, such as **images**, **clusters**, **hosts**, or **vms**.
+#. 再次运行 **RESTList** 操作，将值更改为另一个 `Prism Central API 实例<https://developer.nutanix.com/reference/prism_central/v3/>`_, 例如 **images**, **clusters**, **hosts**, 或 **vms**。
 
-#. Finally, run the **GetDefaultSubnet** action. Expand both the **GetSubnetUUID** and **GetSubnetInfo** tasks, reviewing the output for each task. What is the name and VLAN id of your default subnet?
+#. 最后，运行 **GetDefaultSubnet** 操作。展开 **GetSubnetUUID** 和 **GetSubnetInfo** 任务， 查看每个任务的输出。 默认子网的名称和VLAN ID是多少？
 
    .. figure:: images/GetDefaultSubnet.png
 
    .. figure:: images/GetDefaultSubnet2.png
 
-Publishing to the Task Library
+发布到任务库
 ++++++++++++++++++++++++++++++
 
-Tasks such as common API calls, package installations for common services, domain joins, etc. can be broadly applicable to multiple blueprints. These tasks can be used without leveraging third party tools or manually copying and pasting scripts by instead publishing into the Task Library, Calm's central repository for code re-use.
+诸如通用API调用、通用服务的安装包、域连接等任务可以广泛应用于多个蓝图。这些任务可以在不使用第三方工具或手动复制和粘贴脚本的情况下使用，而是将其发布到Task Library(用于代码重用的平静的中央存储库)。
 
-#. Open your *Initials*\ **-EScript** blueprint in the Blueprint Editor.
+#. 在蓝图编辑器中打开你的 *Initials*\ **-EScript** 蓝图。
 
-#. In the **Application Overview > Application Profile** pane, select the **RESTList** action.
+#. 在 **Application Overview > Application Profile** 窗口中，选择 **RESTList** 操作。
 
-#. Select the **RuntimeList** task to open the task in the **Configuration Pane**.
+#. 选择 **RuntimeList** 任务以在**控制面板** 中打开任务。
 
-#. Click **Publish to Library**.
+#. 单击 **Publish to Library**.
 
-#. In the **Publish Task** window, make the following changes:
+#. 在 **Publish Task** 窗口中，进行以下更改：
 
    - **Name** - *Initials* Prism Central Runtime List
    - Replace **address** with **Prism_Central_IP**
 
    .. figure:: images/publish_task.png
 
-#. Click **Apply** and note that the original **address** macro was replaced with **Prism_Central_IP** in the script window. Replacing macro names allows you to be more generic or descriptive to increase task portability.
+#. 单击 **Apply** ，注意脚本窗口中的原始 **address** 宏被替换为 **Prism_Central_IP**。 替换宏名可以使您更通用或更具描述性，从而提高任务的可移植性。
+#. 单击 **Publish**.
 
-#. Click **Publish**.
-
-#. Open the **Task Library** in the sidebar.  Select your published task. By default, the task will be available to the project from which it was originally published, but you can specify additional projects with which to share the task.
+#. 在侧栏中打开 **Task Library**。选择已发布的任务。默认情况下，该任务将对最初发布该任务的项目可用，但您可以指定与之共享该任务的其他项目。
 
 Takeaways
 +++++++++
 
-What are the key things you should know about **Nutanix Calm**?
+关于 **Nutanix Calm** 你应该知道的关键事项是什么？
 
-- The task library allows commonly used operations to be written once and reused over and over again.  As time goes on more objects will be integrated into the task library, from Nutanix-provided common tasks to entire service objects
+- 任务库允许将常用操作写入一次并反复重复使用。 随着时间的推移，更多的对象将被集成到任务库中，从Nutanix提供的常见任务到整个服务对象。
 
-- Calm 2.7 introduced the HTTP task, allowing the most common use of Escript to be more easily implemented (sending API calls)
+- Calm 2.7引入了HTTP任务，允许更容易实现Escript的最常见用法（发送API调用）。
 
-- In addition to being able to use Bash and Powershell scripts, Nutanix Calm can use EScript, which is a sandboxed Python interpreter, to provide application lifecycle management.
+- 除了能够使用Bash和Powershell脚本之外，Nutanix Calm还可以使用EScript(一种沙箱Python编译器)来提供应用程序生命周期管理。
 
-- EScript tasks are run directly within the Calm engine, rather than being executed on the remote machine.
+- EScript任务直接在Calm引擎中运行，而不是在远程机器上执行。
 
-- Shell, Powershell, and EScript tasks can all be utilized to set a variable based on script output.  That variable can then be used in other portions of the blueprint.
+- Shell、Powershell和EScript任务都可以根据脚本输出设置变量。然后，该变量可以用于蓝图的其他部分。
 
-- The Task Library allows for publishing of commonly used tasks into a central repository, giving the ability to share these scripts across Projects and Blueprints.
+- 任务库允许将常用的任务发布到中央存储库中，从而允许跨项目和蓝图共享这些脚本。
 
 
 .. |proj-icon| image:: ../images/projects_icon.png
